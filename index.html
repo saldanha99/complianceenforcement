@@ -1,0 +1,64 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Compliance Enforcement | GRC, LGPD e ESG</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+              mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'Liberation Mono', 'Courier New', 'monospace'],
+            },
+            keyframes: {
+              glitch: {
+                '0%, 100%': { transform: 'translate(0)' },
+                '33%': { transform: 'translate(-5px, 2px)', filter: 'hue-rotate(90deg)' },
+                '66%': { transform: 'translate(5px, -2px)', filter: 'hue-rotate(180deg)' },
+              },
+              shake: {
+                '10%, 90%': { transform: 'translate3d(-1px, 0, 0)' },
+                '20%, 80%': { transform: 'translate3d(2px, 0, 0)' },
+                '30%, 50%, 70%': { transform: 'translate3d(-4px, 0, 0)' },
+                '40%, 60%': { transform: 'translate3d(4px, 0, 0)' },
+              },
+              scanline: {
+                '0%': { transform: 'translateY(-100%)' },
+                '100%': { transform: 'translateY(100%)' }
+              }
+            },
+            animation: {
+              'glitch': 'glitch 0.2s ease-in-out infinite',
+              'shake': 'shake 0.5s cubic-bezier(.36,.07,.19,.97) both',
+              'scanline': 'scanline 12s linear infinite',
+            }
+          },
+        },
+      }
+    </script>
+
+    <script type="importmap">
+{
+  "imports": {
+    "react": "https://aistudiocdn.com/react@^19.2.1",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.1/",
+    "react/": "https://aistudiocdn.com/react@^19.2.1/",
+    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.555.0",
+    "vite": "https://aistudiocdn.com/vite@^7.2.6",
+    "@vitejs/plugin-react": "https://aistudiocdn.com/@vitejs/plugin-react@^5.1.1"
+  }
+}
+</script>
+  <link rel="stylesheet" href="/index.css">
+</head>
+  <body class="bg-black">
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>
