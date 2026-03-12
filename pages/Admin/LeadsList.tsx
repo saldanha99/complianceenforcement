@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { supabase } from '../../lib/supabase';
+import { api } from '../../lib/api';
 import { Search, Filter, Phone, Mail, Building, Calendar, ChevronDown, ChevronUp } from 'lucide-react';
 
 export function LeadsList() {
@@ -15,14 +15,9 @@ export function LeadsList() {
 
     const fetchLeads = async () => {
         try {
-            let query = supabase
-                .from('leads')
-                .select('*')
-                .order('created_at', { ascending: false });
-
-            const { data, error } = await query;
-
-            if (error) throw error;
+            const token = localStorage.getItem('token');
+            if (!token) return;
+            const data = await api.getLeads(token);
             setLeads(data || []);
         } catch (error) {
             console.error('Error fetching leads:', error);
@@ -48,12 +43,9 @@ export function LeadsList() {
 
     const updateStatus = async (id: string, newStatus: string) => {
         try {
-            const { error } = await supabase
-                .from('leads')
-                .update({ status: newStatus })
-                .eq('id', id);
-
-            if (error) throw error;
+            const token = localStorage.getItem('token');
+            if (!token) return;
+            await api.updateLeadStatus(id, newStatus, token);
 
             // Optimistic update
             setLeads(leads.map(lead =>

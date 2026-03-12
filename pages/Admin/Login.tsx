@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Lock } from 'lucide-react';
-import { supabase } from '../../lib/supabase';
+import { api } from '../../lib/api';
 
 interface LoginProps {
     onLogin: () => void;
@@ -18,28 +18,12 @@ export function Login({ onLogin }: LoginProps) {
         setError('');
 
         try {
-            // For MVP, if they enter the correct hardcoded credentials, we let them in contextually
-            // ideally: await supabase.auth.signInWithPassword({ email, password });
-            // But since we didn't setup Auth users yet, we'll do a simple check OR try Supabase
-
-            const { data, error } = await supabase.auth.signInWithPassword({
-                email,
-                password
-            });
-
-            if (error) {
-                // Fallback for demo purposes if Supabase Auth isn't set up yet
-                if (email === 'admin@compliance.com' && password === 'admin123') {
-                    onLogin();
-                } else {
-                    throw error;
-                }
-            } else {
-                onLogin();
-            }
-
+            const data = await api.login(email, password);
+            localStorage.setItem('token', data.token);
+            localStorage.setItem('user', JSON.stringify(data.user));
+            onLogin();
         } catch (err: any) {
-            setError('Credenciais inválidas. Tente admin@compliance.com / admin123 para demo.');
+            setError(err.message || 'Credenciais inválidas.');
         } finally {
             setLoading(false);
         }

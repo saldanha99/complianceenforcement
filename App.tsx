@@ -20,8 +20,6 @@ import { Dashboard } from './pages/Admin/Dashboard';
 import { LeadsList } from './pages/Admin/LeadsList';
 import { WhatsAppConfig } from './pages/Admin/WhatsAppConfig';
 import { Login } from './pages/Admin/Login';
-import { supabase } from './lib/supabase';
-
 export type Page = 'home' | 'solucoes' | 'sobre' | 'contato' | 'quiz' |
   'expertise-financeira' | 'expertise-regulados' | 'expertise-lgpd' | 'expertise-iso';
 
@@ -31,7 +29,7 @@ function App() {
 
   // Admin State
   const [isAdminMode, setIsAdminMode] = useState(window.location.pathname.startsWith('/admin'));
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('token'));
   const [adminPage, setAdminPage] = useState<'dashboard' | 'leads' | 'whatsapp'>('dashboard');
 
   useEffect(() => {
@@ -55,8 +53,9 @@ function App() {
     setAdminPage(page);
   };
 
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
     setIsAuthenticated(false);
     setIsAdminMode(false);
     window.location.href = '/';

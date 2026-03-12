@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { supabase } from '../lib/supabase';
+import { api } from '../lib/api';
 import { evolutionApi } from '../services/evolutionApi';
 import {
   ShieldAlert, Skull, ChevronRight, ArrowRight, Zap, Lock,
@@ -167,23 +167,23 @@ export const Quiz: React.FC<{ onBack: () => void }> = ({ onBack }) => {
 
     // Save to CRM
     try {
-      const { error } = await supabase.from('leads').insert({
-        name: leadName,
-        phone: leadPhone,
-        quiz_results: {
-          score: riskScore,
-          risk_level: riskStatus,
-          answers: auditQuestions.map((q, i) => ({
-            question: q.category,
-            answer: i <= currentStep ? "Answered" : "Skipped" // Simplified for now as we don't track individual answers in state yet, just score.
-          }))
-        },
-        status: 'new',
-        notes: 'Lead capturado via Quiz de Diagnóstico'
-      });
-
-      if (error) {
-        console.error('Error saving lead:', error);
+      try {
+        await api.createLead({
+          name: leadName,
+          phone: leadPhone,
+          quiz_results: {
+            score: riskScore,
+            risk_level: riskStatus,
+            answers: auditQuestions.map((q, i) => ({
+              question: q.category,
+              answer: i <= currentStep ? "Answered" : "Skipped" // Simplified for now as we don't track individual answers in state yet, just score.
+            }))
+          },
+          status: 'new',
+          notes: 'Lead capturado via Quiz de Diagnóstico'
+        });
+      } catch (err) {
+        console.error('Error saving lead:', err);
         // Continue to WhatsApp anyway? Yes, fail soft.
       }
 

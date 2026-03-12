@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { supabase } from '../../lib/supabase';
+import { api } from '../../lib/api';
 import { Users, Clock, CheckCircle, XCircle } from 'lucide-react';
 
 export function Dashboard() {
@@ -18,11 +18,9 @@ export function Dashboard() {
 
     const fetchStats = async () => {
         try {
-            const { data, error } = await supabase
-                .from('leads')
-                .select('status');
-
-            if (error) throw error;
+            const token = localStorage.getItem('token');
+            if (!token) return;
+            const data = await api.getLeads(token);
 
             const newStats = data.reduce((acc: any, curr: any) => {
                 acc.total++;

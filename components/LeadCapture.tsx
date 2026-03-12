@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { supabase } from '../lib/supabase';
+import { api } from '../lib/api';
 import { RevealOnScroll } from './RevealOnScroll';
 // Added missing CheckCircle2 and Lock imports from lucide-react
 import { Mail, ArrowRight, Sparkles, CheckCircle2, Lock } from 'lucide-react';
@@ -18,14 +18,12 @@ export const LeadCapture: React.FC = () => {
         setIsSubmitting(true);
 
         try {
-            const { error } = await supabase.from('leads').insert({
+            await api.createLead({
                 email: email,
                 status: 'new',
                 tags: ['newsletter'],
                 notes: 'Lead capturado via Newsletter do Rodapé'
             });
-
-            if (error) throw error;
 
             setIsSuccess(true);
             setEmail('');
