@@ -1,6 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { pool } from '../utils/db.js';
 import { verifyToken } from '../utils/auth.js';
+import { evolutionApiServer } from '../utils/evolution.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   res.setHeader('Access-Control-Allow-Credentials', 'true');
@@ -26,7 +27,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       const values = [name, email, phone, company, JSON.stringify(quiz_results || null), status || 'new', notes || null, tags || []];
       
       const result = await pool.query(query, values);
-      return res.status(201).json(result.rows[0]);
+      const insertedLead = result.rows[0];
+
+      // Async WhatsApp trigger (fire and forget)
+      if (phone && name) {
+        const firstName = name.split(' ')[0];
+        const welcomeText = `Olá *${firstName}*! Tudo bem?\n\nAqui é da *Compliance Enforcement Consultoria*.\nRecebemos o seu contato através da nossa calculadora no site e gostaríamos de entender melhor o cenário da sua empresa.\n\nQual o melhor horário para conversarmos rapidamente hoje ou amanhã?`;
+        
+        evolutionApiServer.sendTextMessage(phone, welcomeText).catch(console.error);
+      }
+
+      return res.status(201).json(insertedLead);
     } catch (error: any) {
       console.error('Insert lead error:', error);
       return res.status(500).json({ message: 'Error inserting lead', detail: error.message });

@@ -76,6 +76,21 @@ export const evolutionApi = {
         return await response.json();
     },
 
+    async deleteInstance(instanceName: string = 'compliance_bot') {
+        try {
+            const response = await fetch(`${EVOLUTION_API_URL}/instance/delete/${instanceName}`, {
+                method: 'DELETE',
+                headers: {
+                    'apikey': EVOLUTION_API_KEY
+                }
+            });
+            return await response.json();
+        } catch (e) {
+            console.error(e);
+            throw e;
+        }
+    },
+
     async fetchInstances() {
         try {
             const response = await fetch(`${EVOLUTION_API_URL}/instance/fetchInstances`, {

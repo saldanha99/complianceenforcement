@@ -11,7 +11,9 @@ export function WhatsAppConfig() {
 
     // State for importing existing instance
     const [customInstanceName, setCustomInstanceName] = useState('');
-    const [activeInstanceName, setActiveInstanceName] = useState('compliance_bot');
+    const [activeInstanceName, setActiveInstanceName] = useState(() => {
+        return localStorage.getItem('evolution_instance') || 'ComplianceThais';
+    });
 
     useEffect(() => {
         checkStatus(activeInstanceName);
@@ -112,7 +114,7 @@ export function WhatsAppConfig() {
     };
 
     const handleLogout = async () => {
-        if (!confirm('Tem certeza? Isso irá desconectar o WhatsApp.')) return;
+        if (!confirm('Tem certeza? Isso irá desconectar o WhatsApp do aparelho.')) return;
 
         setLoading(true);
         try {
@@ -128,11 +130,30 @@ export function WhatsAppConfig() {
         }
     };
 
+    const handleDelete = async () => {
+        if (!confirm('ATENÇÃO: Isso irá DELETAR a instância permanentemente da Evolution API. Tem certeza?')) return;
+
+        setLoading(true);
+        try {
+            await evolutionApi.deleteInstance(activeInstanceName);
+            setInstance(null);
+            setQrCode(null);
+            setDebugLog(prev => prev + '\nInstância deletada com sucesso.');
+        } catch (err: any) {
+            console.error(err);
+            setError('Erro ao deletar instância: ' + err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const handleImportInstance = () => {
         if (!customInstanceName.trim()) return;
         // Update active instance first, then check status
-        setActiveInstanceName(customInstanceName);
-        checkStatus(customInstanceName);
+        const newName = customInstanceName.trim();
+        setActiveInstanceName(newName);
+        localStorage.setItem('evolution_instance', newName);
+        checkStatus(newName);
         setCustomInstanceName('');
     };
 
@@ -233,6 +254,18 @@ export function WhatsAppConfig() {
                                 >
                                     <Trash2 size={16} />
                                     Desconectar
+                                </button>
+                            </div>
+                        )}
+
+                        {instance && (
+                            <div className="mt-4 flex justify-end">
+                                <button
+                                    onClick={handleDelete}
+                                    className="flex items-center gap-2 px-3 py-1 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors text-xs font-medium"
+                                >
+                                    <Trash2 size={14} />
+                                    Excluir Instância da API
                                 </button>
                             </div>
                         )}
