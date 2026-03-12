@@ -1,7 +1,8 @@
-const { pool } = require('../utils/db');
-const { verifyToken } = require('../utils/auth');
+import type { VercelRequest, VercelResponse } from '@vercel/node';
+import { pool } from '../utils/db.js';
+import { verifyToken } from '../utils/auth.js';
 
-module.exports = async function handler(req: any, res: any) {
+export default async function handler(req: VercelRequest, res: VercelResponse) {
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
@@ -12,7 +13,7 @@ module.exports = async function handler(req: any, res: any) {
     return;
   }
 
-  // POST: Create a new lead
+  // POST: Create a new lead (public)
   if (req.method === 'POST') {
     const { name, email, phone, company, quiz_results, status, notes, tags } = req.body;
 
@@ -26,9 +27,9 @@ module.exports = async function handler(req: any, res: any) {
       
       const result = await pool.query(query, values);
       return res.status(201).json(result.rows[0]);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Insert lead error:', error);
-      return res.status(500).json({ message: 'Error inserting lead' });
+      return res.status(500).json({ message: 'Error inserting lead', detail: error.message });
     }
   }
 
@@ -50,9 +51,9 @@ module.exports = async function handler(req: any, res: any) {
     try {
       const result = await pool.query('SELECT * FROM leads ORDER BY created_at DESC');
       return res.status(200).json(result.rows);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error fetching leads:', error);
-      return res.status(500).json({ message: 'Error fetching leads' });
+      return res.status(500).json({ message: 'Error fetching leads', detail: error.message });
     }
   }
 
@@ -66,7 +67,7 @@ module.exports = async function handler(req: any, res: any) {
 
     try {
       let query = 'UPDATE leads SET ';
-      const values = [];
+      const values: any[] = [];
       let counter = 1;
 
       if (status !== undefined) {
@@ -91,9 +92,7 @@ module.exports = async function handler(req: any, res: any) {
         return res.status(400).json({ message: 'Nothing to update' });
       }
 
-      // remove trailing comma and space
       query = query.slice(0, -2);
-      
       query += ` WHERE id = $${counter} RETURNING *`;
       values.push(id);
 
@@ -104,9 +103,9 @@ module.exports = async function handler(req: any, res: any) {
       }
       
       return res.status(200).json(result.rows[0]);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Update lead error:', error);
-      return res.status(500).json({ message: 'Error updating lead' });
+      return res.status(500).json({ message: 'Error updating lead', detail: error.message });
     }
   }
 
@@ -126,9 +125,9 @@ module.exports = async function handler(req: any, res: any) {
       }
       
       return res.status(200).json(result.rows[0]);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Delete lead error:', error);
-      return res.status(500).json({ message: 'Error deleting lead' });
+      return res.status(500).json({ message: 'Error deleting lead', detail: error.message });
     }
   }
 

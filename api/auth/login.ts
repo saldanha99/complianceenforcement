@@ -1,9 +1,10 @@
-const { pool } = require('../utils/db');
-const { generateToken } = require('../utils/auth');
-const bcrypt = require('bcryptjs');
+import type { VercelRequest, VercelResponse } from '@vercel/node';
+import { pool } from '../utils/db.js';
+import { generateToken } from '../utils/auth.js';
+import bcrypt from 'bcryptjs';
 
-module.exports = async function handler(req: any, res: any) {
-  // CORS handles
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  // CORS
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
@@ -43,6 +44,6 @@ module.exports = async function handler(req: any, res: any) {
     return res.status(200).json({ token, user: { id: user.id, email: user.email } });
   } catch (error: any) {
     console.error('Login error:', error);
-    return res.status(500).json({ message: 'Internal Server Error', error: error.message });
+    return res.status(500).json({ message: 'Internal Server Error', detail: error.message });
   }
 }
