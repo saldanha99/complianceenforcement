@@ -3,9 +3,8 @@ import { pool } from '../utils/db.js';
 import { evolutionApiServer } from '../utils/evolution.js';
 
 // Internal Notification Group
-// To figure out the real Group JID, check evolution API docs or list groups.
-// You have to overwrite this via Vercel Environment Variables later.
-const LEAD_ALERT_GROUP_JID = process.env.LEAD_ALERT_GROUP_JID || '12036304561829@g.us'; 
+// Extracted via Evolution API from invite link provided by user
+const LEAD_ALERT_GROUP_JID = process.env.LEAD_ALERT_GROUP_JID || '120363406751423640@g.us'; 
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // CORS for external webhooks
