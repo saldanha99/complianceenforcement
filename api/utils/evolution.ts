@@ -1,6 +1,6 @@
 // Configuração da Evolution API
-const EVOLUTION_API_URL = 'https://api.2b.app.br';
-const EVOLUTION_API_KEY = 'd037768b3d06382756a0d9edecf3e40e';
+const EVOLUTION_API_URL = process.env.VITE_EVOLUTION_API_URL || 'https://api.2b.app.br';
+const EVOLUTION_API_KEY = process.env.VITE_EVOLUTION_API_KEY;
 
 // Exportando os métodos
 export const evolutionApiServer = {

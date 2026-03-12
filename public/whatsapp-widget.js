@@ -187,7 +187,7 @@
   
     // HTML Structure
     const container = document.createElement('div');
-    container.innerHTML = \`
+    container.innerHTML = `
       <div id="cce-wa-popup" class="cce-wa-popup">
         <div class="cce-wa-header">
           <div class="cce-wa-header-brand">
@@ -220,7 +220,7 @@
       <button id="cce-wa-btn" class="cce-wa-widget-btn" aria-label="Abrir WhatsApp">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
       </button>
-    \`;
+    `;
     document.body.appendChild(container);
   
     // Elements logic
@@ -291,8 +291,8 @@
   
       // Redirect
       const firstName = name.split(' ')[0];
-      const text = encodeURIComponent(\`Olá, me chamo \${firstName}! Vim pelo site e gostaria de tirar uma dúvida.\`);
-      window.open(\`https://wa.me/\${WHATSAPP_NUMBER}?text=\${text}\`, '_blank');
+      const text = encodeURIComponent(`Olá, me chamo ${firstName}! Vim pelo site e gostaria de tirar uma dúvida.`);
+      window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${text}`, '_blank');
   
       // Reset
       popup.classList.remove('cce-open');

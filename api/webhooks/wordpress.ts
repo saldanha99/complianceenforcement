@@ -52,7 +52,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       await evolutionApiServer.sendTextMessage(phone, welcomeText).catch(e => console.error('Failed to message WP Lead:', e));
 
       // B. Alert to Internal Group
-      const alertMsg = `🚀 *NOVO LEAD DO WORDPRESS*\n\n*Nome:* ${name}\n*Empresa:* ${company}\n*WhatsApp:* wa.me/55${phone}\n*E-mail:* ${email}\n\n*Mensagem:* ${notes}`;
+      const alertMsg = `Veio pelo WordPress!\n*NOVO LEAD* 📢\n\n*Nome:* ${name}\n*WhatsApp:* https://wa.me/55${phone}\n*Empresa:* ${company}\n*Serviço Necessitado:* ${notes}`;
       await evolutionApiServer.sendTextMessage(LEAD_ALERT_GROUP_JID, alertMsg).catch(e => console.error('Failed to send group alert:', e));
     }
 

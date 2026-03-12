@@ -3,6 +3,8 @@ import { pool } from '../utils/db.js';
 import { verifyToken } from '../utils/auth.js';
 import { evolutionApiServer } from '../utils/evolution.js';
 
+const LEAD_ALERT_GROUP_JID = process.env.LEAD_ALERT_GROUP_JID || '120363406751423640@g.us';
+
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -32,9 +34,18 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       // Async WhatsApp trigger (fire and forget)
       if (phone && name) {
         const firstName = name.split(' ')[0];
-        const welcomeText = `Olá *${firstName}*! Tudo bem?\n\nAqui é da *Compliance Enforcement Consultoria*.\nRecebemos o seu contato através da nossa calculadora no site e gostaríamos de entender melhor o cenário da sua empresa.\n\nQual o melhor horário para conversarmos rapidamente hoje ou amanhã?`;
         
+        // Message to the Lead
+        const welcomeText = `Olá *${firstName}*! Tudo bem?\n\nAqui é da *Compliance Enforcement Consultoria*.\nRecebemos o seu contato através da nossa calculadora no site e gostaríamos de entender melhor o cenário da sua empresa.\n\nQual o melhor horário para conversarmos rapidamente hoje ou amanhã?`;
         evolutionApiServer.sendTextMessage(phone, welcomeText).catch(console.error);
+
+        // Alert to Internal Group
+        const isFromWidget = tags && tags.includes('whatsapp-widget');
+        const originText = isFromWidget ? 'Veio pelo formulário!' : 'Veio pelo Quiz!';
+      
+        const alertMsg = `${originText}\n*NOVO LEAD* 📢\n\n*Nome:* ${name}\n*WhatsApp:* https://wa.me/55${phone}\n*Empresa:* ${company || 'Não informada'}\n*Serviço Necessitado:* ${notes || 'Diagnóstico via Calculadora'}`;
+        
+        evolutionApiServer.sendTextMessage(LEAD_ALERT_GROUP_JID, alertMsg).catch(console.error);
       }
 
       return res.status(201).json(insertedLead);
