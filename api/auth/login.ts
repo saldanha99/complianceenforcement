@@ -1,9 +1,8 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { pool } from '../utils/db';
-import { generateToken } from '../utils/auth';
-import bcrypt from 'bcryptjs';
+const { pool } = require('../utils/db');
+const { generateToken } = require('../utils/auth');
+const bcrypt = require('bcryptjs');
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
+module.exports = async function handler(req: any, res: any) {
   // CORS handles
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Origin', '*');
