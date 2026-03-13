@@ -46,14 +46,25 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           welcomeText = `Olá *${firstName}*! Tudo bem?\n\nSou a Taís da *Compliance Enforcement Consultoria*.\nRecebemos o seu contato através do nosso site e gostaríamos de entender melhor o cenário da sua empresa.\n\nQual o melhor horário para conversarmos rapidamente hoje ou amanhã?`;
         }
 
-        evolutionApiServer.sendTextMessage(cleanPhone, welcomeText).catch(console.error);
-
-        // Alert to Internal Group
         const originText = isFromWidget ? 'Veio pelo formulário!' : 'Veio pelo Quiz!';
-      
         const alertMsg = `${originText}\n*NOVO LEAD* 📢\n\n*Nome:* ${name}\n*WhatsApp:* https://wa.me/55${cleanPhone}\n*Empresa:* ${company || 'Não informada'}`;
         
-        evolutionApiServer.sendTextMessage(LEAD_ALERT_GROUP_JID, alertMsg).catch(console.error);
+        const fireAutomations = async () => {
+          try {
+            await Promise.all([
+              evolutionApiServer.sendTextMessage(cleanPhone, welcomeText),
+              evolutionApiServer.sendTextMessage(LEAD_ALERT_GROUP_JID, alertMsg)
+            ]);
+          } catch(e) {
+            console.error('Failed Evolution API trigger:', e);
+          }
+        };
+
+        if (typeof (req as any).waitUntil === 'function') {
+          (req as any).waitUntil(fireAutomations());
+        } else {
+          fireAutomations();
+        }
       }
 
       return res.status(201).json(insertedLead);
