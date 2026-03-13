@@ -48,11 +48,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       const firstName = name.split(' ')[0];
       
       // A. Message to the Lead
-      const welcomeText = `Olá *${firstName}*! Tudo bem?\n\nAqui é da *Compliance Enforcement Consultoria*.\nRecebemos o seu contato por meio do nosso site e gostaríamos de entender melhor a sua necessidade.\n\nQual o melhor horário para conversarmos rapidamente hoje ou amanhã?`;
+      const welcomeText = `Olá *${firstName}*! Tudo bem?\n\nAqui é da *Compliance Enforcement Consultoria*.\nRecebemos o seu contato através do nosso site e gostaríamos de entender melhor o cenário da sua empresa.\n\nQual o melhor horário para conversarmos rapidamente hoje ou amanhã?`;
       await evolutionApiServer.sendTextMessage(phone, welcomeText).catch(e => console.error('Failed to message WP Lead:', e));
 
       // B. Alert to Internal Group
-      const alertMsg = `Veio pelo WordPress!\n*NOVO LEAD* 📢\n\n*Nome:* ${name}\n*WhatsApp:* https://wa.me/55${phone}\n*Empresa:* ${company}\n*Serviço Necessitado:* ${notes}`;
+      const alertMsg = `Veio pelo WordPress!\n*NOVO LEAD* 📢\n\n*Nome:* ${name}\n*WhatsApp:* https://wa.me/55${phone}\n*Empresa:* ${company}`;
       await evolutionApiServer.sendTextMessage(LEAD_ALERT_GROUP_JID, alertMsg).catch(e => console.error('Failed to send group alert:', e));
     }
 

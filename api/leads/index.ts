@@ -36,14 +36,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         const firstName = name.split(' ')[0];
         
         // Message to the Lead
-        const welcomeText = `Olá *${firstName}*! Tudo bem?\n\nAqui é da *Compliance Enforcement Consultoria*.\nRecebemos o seu contato através da nossa calculadora no site e gostaríamos de entender melhor o cenário da sua empresa.\n\nQual o melhor horário para conversarmos rapidamente hoje ou amanhã?`;
+        const welcomeText = `Olá *${firstName}*! Tudo bem?\n\nAqui é da *Compliance Enforcement Consultoria*.\nRecebemos o seu contato através do nosso site e gostaríamos de entender melhor o cenário da sua empresa.\n\nQual o melhor horário para conversarmos rapidamente hoje ou amanhã?`;
         evolutionApiServer.sendTextMessage(phone, welcomeText).catch(console.error);
 
         // Alert to Internal Group
         const isFromWidget = tags && tags.includes('whatsapp-widget');
         const originText = isFromWidget ? 'Veio pelo formulário!' : 'Veio pelo Quiz!';
       
-        const alertMsg = `${originText}\n*NOVO LEAD* 📢\n\n*Nome:* ${name}\n*WhatsApp:* https://wa.me/55${phone}\n*Empresa:* ${company || 'Não informada'}\n*Serviço Necessitado:* ${notes || 'Diagnóstico via Calculadora'}`;
+        const alertMsg = `${originText}\n*NOVO LEAD* 📢\n\n*Nome:* ${name}\n*WhatsApp:* https://wa.me/55${phone}\n*Empresa:* ${company || 'Não informada'}`;
         
         evolutionApiServer.sendTextMessage(LEAD_ALERT_GROUP_JID, alertMsg).catch(console.error);
       }

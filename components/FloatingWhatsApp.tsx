@@ -22,7 +22,8 @@ export function FloatingWhatsApp() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name || !phone || phone.replace(/\D/g, '').length < 10) return;
+    const rawPhone = phone.replace(/\D/g, '');
+    if (!name || !phone || rawPhone.length < 10) return;
 
     setIsLoading(true);
 
@@ -33,9 +34,8 @@ export function FloatingWhatsApp() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name,
-          phone,
+          phone: rawPhone,
           company,
-          notes: 'Origem: Widget WhatsApp Flutuante',
           status: 'new',
           tags: ['whatsapp-widget']
         })
@@ -43,22 +43,28 @@ export function FloatingWhatsApp() {
 
       // 2. Redirect to WhatsApp
       const firstName = name.split(' ')[0];
-      const text = encodeURIComponent(`Olá, me chamo ${firstName}! Estou no site de vocês e gostaria de tirar uma dúvida.`);
+      const text = encodeURIComponent(`Olá, me chamo ${firstName}! Vim pelo site e gostaria de tirar uma dúvida.`);
       const waUrl = `https://wa.me/${whatsappNumber}?text=${text}`;
       
-      window.open(waUrl, '_blank');
+      try {
+        window.location.href = waUrl;
+      } catch (e) {
+        window.open(waUrl, '_blank');
+      }
       
       // Reset after opening
-      setIsOpen(false);
-      setName('');
-      setPhone('');
-      setCompany('');
+      setTimeout(() => {
+        setIsOpen(false);
+        setName('');
+        setPhone('');
+        setCompany('');
+        setIsLoading(false);
+      }, 1000);
       
     } catch (err) {
       console.error('Error submitting WA widget lead:', err);
       // Fallback redirect even if API fails
       window.open(`https://wa.me/${whatsappNumber}`, '_blank');
-    } finally {
       setIsLoading(false);
     }
   };

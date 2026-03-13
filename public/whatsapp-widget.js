@@ -281,7 +281,6 @@
             name,
             phone,
             company,
-            notes: 'Origem: Widget Local/WordPress',
             status: 'new',
             tags: ['whatsapp-widget']
           })
@@ -293,13 +292,22 @@
       // Redirect
       const firstName = name.split(' ')[0];
       const text = encodeURIComponent(`Olá, me chamo ${firstName}! Vim pelo site e gostaria de tirar uma dúvida.`);
-      window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${text}`, '_blank');
-  
-      // Reset
-      popup.classList.remove('cce-open');
-      setTimeout(() => btn.style.display = 'flex', 300);
-      form.reset();
-      submitBtn.disabled = false;
+      
+      // Attempt to open WhatsApp
+      try {
+        window.location.href = `https://wa.me/${WHATSAPP_NUMBER}?text=${text}`;
+      } catch(e) {
+        window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${text}`, '_blank');
+      }
+      
+      // Reset after redirect trigger
+      setTimeout(() => {
+        popup.classList.remove('cce-open');
+        btn.style.display = 'flex';
+        form.reset();
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = 'Iniciar Conversa <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>';
+      }, 1000);
       submitBtn.innerHTML = 'Iniciar Conversa <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>';
     });
   })();
