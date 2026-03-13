@@ -42,31 +42,40 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const result = await pool.query(query, values);
     const lead = result.rows[0];
 
+    // Return early to WP so it doesn't hang or queue
+    res.status(200).json({ success: true, lead });
+
     // 2. Automations (Evolution API)
-    // Only fire if we actually got a phone number
+    // Fire and forget in the background, but wrapped in a promise Vercel awaits viawaitUntil if available
     if (phone) {
       const firstName = name.split(' ')[0];
       
-      // A. Message to the Lead
       const welcomeText = `Olá *${firstName}*! Tudo bem?\n\nAqui é da *Compliance Enforcement Consultoria*.\nRecebemos o seu contato através do nosso site e gostaríamos de entender melhor o cenário da sua empresa.\n\nQual o melhor horário para conversarmos rapidamente hoje ou amanhã?`;
-      
-      // B. Alert to Internal Group
       const alertMsg = `Veio pelo WordPress!\n*NOVO LEAD* 📢\n\n*Nome:* ${name}\n*WhatsApp:* https://wa.me/55${phone}\n*Empresa:* ${company}`;
       
-      try {
-        await Promise.all([
-          evolutionApiServer.sendTextMessage(phone, welcomeText),
-          evolutionApiServer.sendTextMessage(LEAD_ALERT_GROUP_JID, alertMsg)
-        ]);
-      } catch(e) {
-        console.error('Failed Evolution API WP hook:', e);
+      const fireAutomations = async () => {
+        try {
+          await Promise.all([
+            evolutionApiServer.sendTextMessage(phone, welcomeText),
+            evolutionApiServer.sendTextMessage(LEAD_ALERT_GROUP_JID, alertMsg)
+          ]);
+        } catch(e) {
+          console.error('Failed Evolution API WP hook:', e);
+        }
+      };
+
+      // Vercel waitUntil allows the lambda to continue running after returning the response
+      if (typeof (req as any).waitUntil === 'function') {
+        (req as any).waitUntil(fireAutomations());
+      } else {
+        fireAutomations();
       }
     }
 
-    return res.status(200).json({ success: true, lead });
-
   } catch (error: any) {
     console.error('WP Webhook error:', error);
-    return res.status(500).json({ message: 'Webhook processing failed', detail: String(error) });
+    if (!res.headersSent) {
+      return res.status(500).json({ message: 'Webhook processing failed', detail: String(error) });
+    }
   }
 }
