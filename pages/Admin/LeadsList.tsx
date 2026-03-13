@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { api } from '../../lib/api';
-import { Search, Filter, Phone, Mail, Building, Calendar, ChevronDown, ChevronUp } from 'lucide-react';
+import { Search, Filter, Phone, Mail, Building, Calendar, ChevronDown, ChevronUp, LayoutGrid, List } from 'lucide-react';
+import { KanbanBoard } from '../../components/Admin/Kanban/KanbanBoard';
 
 export function LeadsList() {
     const [leads, setLeads] = useState<any[]>([]);
@@ -8,6 +9,7 @@ export function LeadsList() {
     const [searchTerm, setSearchTerm] = useState('');
     const [statusFilter, setStatusFilter] = useState('all');
     const [expandedLead, setExpandedLead] = useState<string | null>(null);
+    const [viewMode, setViewMode] = useState<'board' | 'list'>('board');
 
     useEffect(() => {
         fetchLeads();
@@ -116,13 +118,41 @@ export function LeadsList() {
                             <option value="lost">Perdidos</option>
                         </select>
                     </div>
+
+                    <div className="flex bg-slate-100 p-1 rounded-lg border border-slate-200">
+                        <button
+                            onClick={() => setViewMode('board')}
+                            className={`p-1.5 rounded-md transition-all ${viewMode === 'board' ? 'bg-white shadow-sm text-orange-600' : 'text-slate-500 hover:text-slate-700'}`}
+                            title="Visualização em Board"
+                        >
+                            <LayoutGrid size={18} />
+                        </button>
+                        <button
+                            onClick={() => setViewMode('list')}
+                            className={`p-1.5 rounded-md transition-all ${viewMode === 'list' ? 'bg-white shadow-sm text-orange-600' : 'text-slate-500 hover:text-slate-700'}`}
+                            title="Visualização em Lista"
+                        >
+                            <List size={18} />
+                        </button>
+                    </div>
                 </div>
             </div>
 
-            <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-                {loading ? (
-                    <div className="p-12 text-center text-slate-500">Carregando leads...</div>
-                ) : filteredLeads.length === 0 ? (
+            {viewMode === 'board' ? (
+                <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-4 overflow-hidden">
+                    {loading ? (
+                        <div className="p-12 text-center text-slate-500">Carregando leads no board...</div>
+                    ) : filteredLeads.length === 0 ? (
+                        <div className="p-12 text-center text-slate-500">Nenhum lead encontrado para este filtro.</div>
+                    ) : (
+                        <KanbanBoard leads={filteredLeads} onStatusChange={updateStatus} />
+                    )}
+                </div>
+            ) : (
+                <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+                    {loading ? (
+                        <div className="p-12 text-center text-slate-500">Carregando leads...</div>
+                    ) : filteredLeads.length === 0 ? (
                     <div className="p-12 text-center text-slate-500">Nenhum lead encontrado.</div>
                 ) : (
                     <div className="divide-y divide-slate-100">
@@ -215,6 +245,7 @@ export function LeadsList() {
                     </div>
                 )}
             </div>
+            )}
         </div>
     );
 }

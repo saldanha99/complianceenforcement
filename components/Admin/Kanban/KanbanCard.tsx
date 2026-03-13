@@ -16,7 +16,7 @@ export function KanbanCard({ lead }: KanbanCardProps) {
     transition,
     isDragging,
   } = useSortable({
-    id: lead.id,
+    id: String(lead.id),
     data: {
       type: 'Card',
       lead,

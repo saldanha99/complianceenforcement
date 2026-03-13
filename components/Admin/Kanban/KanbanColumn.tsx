@@ -11,10 +11,10 @@ interface KanbanColumnProps {
 
 export function KanbanColumn({ id, title, leads }: KanbanColumnProps) {
   const { setNodeRef, isOver } = useDroppable({
-    id,
+    id: String(id),
     data: {
       type: 'Column',
-      columnId: id,
+      columnId: String(id),
     },
   });
 
