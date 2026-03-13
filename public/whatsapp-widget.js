@@ -279,7 +279,7 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             name,
-            phone,
+            phone: rawPhone,
             company,
             status: 'new',
             tags: ['whatsapp-widget']

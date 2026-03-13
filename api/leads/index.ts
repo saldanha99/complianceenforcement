@@ -26,7 +26,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
         RETURNING *
       `;
-      const values = [name, email || 'sem-email@whatsapp-widget.com', phone, company, JSON.stringify(quiz_results || null), status || 'new', notes || null, tags || []];
+      // Safely ensure phone is just digits before inserting and formatting
+      const cleanPhone = phone ? phone.replace(/\D/g, '') : '';
+      const values = [name, email || 'sem-email@whatsapp-widget.com', cleanPhone, company, JSON.stringify(quiz_results || null), status || 'new', notes || null, tags || []];
       
       const result = await pool.query(query, values);
       const insertedLead = result.rows[0];
@@ -36,14 +38,20 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         const firstName = name.split(' ')[0];
         
         // Message to the Lead
-        const welcomeText = `Olá *${firstName}*! Tudo bem?\n\nAqui é da *Compliance Enforcement Consultoria*.\nRecebemos o seu contato através do nosso site e gostaríamos de entender melhor o cenário da sua empresa.\n\nQual o melhor horário para conversarmos rapidamente hoje ou amanhã?`;
-        evolutionApiServer.sendTextMessage(phone, welcomeText).catch(console.error);
+        const isFromWidget = tags && tags.includes('whatsapp-widget');
+        
+        let welcomeText = `Olá *${firstName}*! Tudo bem?\n\nSou a Taís da *Compliance Enforcement Consultoria*.\nRecebemos o seu contato através da nossa calculadora no site e gostaríamos de entender melhor o cenário da sua empresa.\n\nQual o melhor horário para conversarmos rapidamente hoje ou amanhã?`;
+        
+        if (isFromWidget) {
+          welcomeText = `Olá *${firstName}*! Tudo bem?\n\nSou a Taís da *Compliance Enforcement Consultoria*.\nRecebemos o seu contato através do nosso site e gostaríamos de entender melhor o cenário da sua empresa.\n\nQual o melhor horário para conversarmos rapidamente hoje ou amanhã?`;
+        }
+
+        evolutionApiServer.sendTextMessage(cleanPhone, welcomeText).catch(console.error);
 
         // Alert to Internal Group
-        const isFromWidget = tags && tags.includes('whatsapp-widget');
         const originText = isFromWidget ? 'Veio pelo formulário!' : 'Veio pelo Quiz!';
       
-        const alertMsg = `${originText}\n*NOVO LEAD* 📢\n\n*Nome:* ${name}\n*WhatsApp:* https://wa.me/55${phone}\n*Empresa:* ${company || 'Não informada'}`;
+        const alertMsg = `${originText}\n*NOVO LEAD* 📢\n\n*Nome:* ${name}\n*WhatsApp:* https://wa.me/55${cleanPhone}\n*Empresa:* ${company || 'Não informada'}`;
         
         evolutionApiServer.sendTextMessage(LEAD_ALERT_GROUP_JID, alertMsg).catch(console.error);
       }
