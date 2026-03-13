@@ -26,7 +26,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
         RETURNING *
       `;
-      const values = [name, email, phone, company, JSON.stringify(quiz_results || null), status || 'new', notes || null, tags || []];
+      const values = [name, email || 'sem-email@whatsapp-widget.com', phone, company, JSON.stringify(quiz_results || null), status || 'new', notes || null, tags || []];
       
       const result = await pool.query(query, values);
       const insertedLead = result.rows[0];

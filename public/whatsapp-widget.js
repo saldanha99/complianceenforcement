@@ -32,7 +32,7 @@
         bottom: 24px;
         right: 24px;
         z-index: 999999;
-        background-color: #22c55e;
+        background-color: #25D366;
         color: white;
         width: 60px;
         height: 60px;
@@ -48,7 +48,7 @@
       }
       .cce-wa-widget-btn:hover {
         transform: scale(1.1);
-        background-color: #16a34a;
+        background-color: #128C7E;
       }
       .cce-wa-widget-btn svg {
         width: 28px;
@@ -79,8 +79,8 @@
       }
       
       .cce-wa-header {
-        background-color: #22c55e;
-        padding: 16px;
+        background-color: #128C7E;
+        padding: 12px 16px;
         color: white;
         display: flex;
         justify-content: space-between;
@@ -140,26 +140,28 @@
       }
       .cce-wa-input {
         width: 100%;
-        padding: 10px 16px;
-        border: 1px solid #e2e8f0;
+        padding: 12px 14px;
+        border: 1px solid #d1d5db;
         border-radius: 8px;
         margin-bottom: 12px;
         font-size: 14px;
         box-sizing: border-box;
         outline: none;
-        transition: border-color 0.2s;
+        transition: border-color 0.2s, box-shadow 0.2s;
         background: white;
+        color: #111827;
       }
       .cce-wa-input:focus {
-        border-color: #22c55e;
+        border-color: #25D366;
+        box-shadow: 0 0 0 3px rgba(37,211,102,0.2);
       }
       .cce-wa-submit {
         width: 100%;
         padding: 12px;
-        background: #22c55e;
+        background: #25D366;
         color: white;
         border: none;
-        border-radius: 8px;
+        border-radius: 24px;
         font-size: 14px;
         font-weight: bold;
         cursor: pointer;
@@ -167,11 +169,12 @@
         justify-content: center;
         align-items: center;
         gap: 8px;
-        margin-top: 8px;
-        transition: background 0.2s;
+        margin-top: 4px;
+        transition: background 0.2s, transform 0.1s;
+        box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
       }
       .cce-wa-submit:hover {
-        background: #16a34a;
+        background: #128C7E;
       }
       .cce-wa-submit:disabled {
         opacity: 0.7;
@@ -207,7 +210,7 @@
           <p>Preencha os dados abaixo para iniciar a conversa no WhatsApp.</p>
           <form id="cce-wa-form">
             <input type="text" id="cce-wa-name" class="cce-wa-input" placeholder="Seu Nome" required>
-            <input type="tel" id="cce-wa-phone" class="cce-wa-input" placeholder="WhatsApp (com DDD)" required>
+            <input type="text" inputmode="numeric" id="cce-wa-phone" class="cce-wa-input" placeholder="WhatsApp (com DDD)" required>
             <input type="text" id="cce-wa-company" class="cce-wa-input" placeholder="Nome da Empresa (Opcional)">
             <button type="submit" id="cce-wa-submit" class="cce-wa-submit">
               Iniciar Conversa

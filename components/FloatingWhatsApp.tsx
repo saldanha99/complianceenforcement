@@ -67,8 +67,8 @@ export function FloatingWhatsApp() {
     <>
       {/* Pop-up Overlay & Form */}
       {isOpen && (
-        <div className="fixed bottom-24 right-6 w-80 bg-white rounded-2xl shadow-2xl z-50 overflow-hidden border border-slate-100 animate-in slide-in-from-bottom-5 fade-in duration-300">
-          <div className="bg-green-500 p-4 flex justify-between items-center text-white">
+        <div className="fixed bottom-24 right-6 w-[320px] bg-white rounded-2xl shadow-2xl z-50 overflow-hidden border border-slate-100 animate-in slide-in-from-bottom-5 fade-in duration-300">
+          <div className="bg-[#128C7E] p-4 flex justify-between items-center text-white">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -101,17 +101,18 @@ export function FloatingWhatsApp() {
                   placeholder="Seu Nome"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-md border border-slate-200 text-sm focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500"
+                  className="w-full px-4 py-3 bg-slate-50/50 rounded-lg border border-slate-200 text-sm focus:outline-none focus:border-[#25D366] focus:ring-2 focus:ring-[#25D366]/20 transition-all font-medium text-slate-700"
                 />
               </div>
               <div>
                 <input
-                  type="tel"
+                  type="text"
+                  inputMode="numeric"
                   required
                   placeholder="WhatsApp (com DDD)"
                   value={phone}
                   onChange={handlePhoneChange}
-                  className="w-full px-4 py-2.5 rounded-md border border-slate-200 text-sm focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500"
+                  className="w-full px-4 py-3 bg-slate-50/50 rounded-lg border border-slate-200 text-sm focus:outline-none focus:border-[#25D366] focus:ring-2 focus:ring-[#25D366]/20 transition-all font-medium text-slate-700"
                 />
               </div>
               <div>
@@ -120,14 +121,14 @@ export function FloatingWhatsApp() {
                   placeholder="Nome da Empresa (Opcional)"
                   value={company}
                   onChange={(e) => setCompany(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-md border border-slate-200 text-sm focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500"
+                  className="w-full px-4 py-3 bg-slate-50/50 rounded-lg border border-slate-200 text-sm focus:outline-none focus:border-[#25D366] focus:ring-2 focus:ring-[#25D366]/20 transition-all font-medium text-slate-700"
                 />
               </div>
               
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2.5 rounded-md text-sm transition-colors mt-2 flex justify-center items-center gap-2"
+                className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white font-bold py-3 rounded-full text-sm transition-all mt-4 flex justify-center items-center gap-2 shadow-lg shadow-[#25D366]/30"
               >
                 {isLoading ? 'Conectando...' : 'Iniciar Conversa'}
                 {!isLoading && (
@@ -146,7 +147,7 @@ export function FloatingWhatsApp() {
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="fixed bottom-6 right-6 z-40 bg-green-500 hover:bg-green-600 text-white p-4 rounded-full shadow-lg shadow-green-500/30 transition-transform duration-300 hover:scale-110 flex items-center justify-center animate-bounce"
+          className="fixed bottom-6 right-6 z-40 bg-[#25D366] hover:bg-[#128C7E] text-white p-4 rounded-full shadow-xl shadow-[#25D366]/40 transition-transform duration-300 hover:scale-110 flex items-center justify-center animate-bounce"
           aria-label="Abrir WhatsApp"
         >
           <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
