@@ -49,21 +49,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         const originText = isFromWidget ? 'Veio pelo formulário!' : 'Veio pelo Quiz!';
         const alertMsg = `${originText}\n*NOVO LEAD* 📢\n\n*Nome:* ${name}\n*WhatsApp:* https://wa.me/55${cleanPhone}\n*Empresa:* ${company || 'Não informada'}`;
         
-        const fireAutomations = async () => {
-          try {
-            await Promise.all([
-              evolutionApiServer.sendTextMessage(cleanPhone, welcomeText),
-              evolutionApiServer.sendTextMessage(LEAD_ALERT_GROUP_JID, alertMsg)
-            ]);
-          } catch(e) {
-            console.error('Failed Evolution API trigger:', e);
-          }
-        };
-
-        if (typeof (req as any).waitUntil === 'function') {
-          (req as any).waitUntil(fireAutomations());
-        } else {
-          fireAutomations();
+        // MUST fully await before responding — Vercel freezes the lambda after res.json()
+        try {
+          await Promise.all([
+            evolutionApiServer.sendTextMessage(cleanPhone, welcomeText),
+            evolutionApiServer.sendTextMessage(LEAD_ALERT_GROUP_JID, alertMsg)
+          ]);
+          console.log('Evolution API messages sent successfully for lead:', name);
+        } catch(e) {
+          console.error('Failed Evolution API trigger:', e);
         }
       }
 
