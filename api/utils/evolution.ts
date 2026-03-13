@@ -40,9 +40,7 @@ export const evolutionApiServer = {
             delay: 1500, // delay de 1.5s para simular digitação
             presence: 'composing',
           },
-          textMessage: {
-            text: text,
-          },
+          text: text,
         }),
       });
 
