@@ -101,7 +101,7 @@ export function FloatingWhatsApp() {
                   placeholder="Seu Nome"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500"
+                  className="w-full px-4 py-2.5 rounded-md border border-slate-200 text-sm focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500"
                 />
               </div>
               <div>
@@ -111,7 +111,7 @@ export function FloatingWhatsApp() {
                   placeholder="WhatsApp (com DDD)"
                   value={phone}
                   onChange={handlePhoneChange}
-                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500"
+                  className="w-full px-4 py-2.5 rounded-md border border-slate-200 text-sm focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500"
                 />
               </div>
               <div>
@@ -120,14 +120,14 @@ export function FloatingWhatsApp() {
                   placeholder="Nome da Empresa (Opcional)"
                   value={company}
                   onChange={(e) => setCompany(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500"
+                  className="w-full px-4 py-2.5 rounded-md border border-slate-200 text-sm focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500"
                 />
               </div>
               
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2.5 rounded-xl text-sm transition-colors mt-2 flex justify-center items-center gap-2"
+                className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2.5 rounded-md text-sm transition-colors mt-2 flex justify-center items-center gap-2"
               >
                 {isLoading ? 'Conectando...' : 'Iniciar Conversa'}
                 {!isLoading && (

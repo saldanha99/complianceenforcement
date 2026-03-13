@@ -142,7 +142,7 @@
         width: 100%;
         padding: 10px 16px;
         border: 1px solid #e2e8f0;
-        border-radius: 12px;
+        border-radius: 8px;
         margin-bottom: 12px;
         font-size: 14px;
         box-sizing: border-box;
@@ -159,7 +159,7 @@
         background: #22c55e;
         color: white;
         border: none;
-        border-radius: 12px;
+        border-radius: 8px;
         font-size: 14px;
         font-weight: bold;
         cursor: pointer;
@@ -245,14 +245,12 @@
   
     // Phone mask
     phoneInput.addEventListener('input', (e) => {
-      let value = e.target.value.replace(/\\D/g, '');
+      let value = e.target.value.replace(/\D/g, '');
       if (value.length > 11) value = value.slice(0, 11);
       
-      if (value.length > 2) {
-        value = '(' + value.substring(0,2) + ') ' + value.substring(2);
-      }
-      if (value.length > 9) {
-        value = value.substring(0,10) + '-' + value.substring(10);
+      if (value.length > 0) {
+        value = value.replace(/^(\d{2})(\d)/g, '($1) $2');
+        value = value.replace(/(\d)(\d{4})$/, '$1-$2');
       }
       e.target.value = value;
     });
@@ -264,7 +262,7 @@
       const name = document.getElementById('cce-wa-name').value;
       const phone = phoneInput.value;
       const company = document.getElementById('cce-wa-company').value;
-      const rawPhone = phone.replace(/\\D/g, '');
+      const rawPhone = phone.replace(/\D/g, '');
   
       if (!name || rawPhone.length < 10) return;
   
