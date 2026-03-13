@@ -153,10 +153,10 @@ export function LeadsList() {
                     {loading ? (
                         <div className="p-12 text-center text-slate-500">Carregando leads...</div>
                     ) : filteredLeads.length === 0 ? (
-                    <div className="p-12 text-center text-slate-500">Nenhum lead encontrado.</div>
-                ) : (
-                    <div className="divide-y divide-slate-100">
-                        {filteredLeads.map((lead) => (
+                        <div className="p-12 text-center text-slate-500">Nenhum lead encontrado.</div>
+                    ) : (
+                        <div className="divide-y divide-slate-100">
+                            {filteredLeads.map((lead) => (
                             <div key={lead.id} className="hover:bg-slate-50 transition-colors">
                                 <div
                                     className="p-6 cursor-pointer"
@@ -241,10 +241,10 @@ export function LeadsList() {
                                     </div>
                                 )}
                             </div>
-                        ))}
-                    </div>
-                )}
-            </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
             )}
         </div>
     );

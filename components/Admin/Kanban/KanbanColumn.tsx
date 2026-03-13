@@ -44,7 +44,7 @@ export function KanbanColumn({ id, title, leads }: KanbanColumnProps) {
           isOver ? 'bg-slate-200/50' : ''
         }`}
       >
-        <SortableContext items={leads.map(l => l.id)} strategy={verticalListSortingStrategy}>
+        <SortableContext items={leads.map(l => String(l.id))} strategy={verticalListSortingStrategy}>
           {leads.map((lead) => (
             <KanbanCard key={lead.id} lead={lead} />
           ))}
